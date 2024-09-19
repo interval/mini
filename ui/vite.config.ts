@@ -56,6 +56,7 @@ export default defineConfig(async ({ command }) => {
     //   ],
     // },
     build: {
+      emptyOutDir: true,
       outDir: 'dist/static',
       //   assetsDir: "app-assets",
     },
