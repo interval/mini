@@ -1,0 +1,44 @@
+{
+  "name": "@interval/mini",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsup-node"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.109.0",
+    "@aws-sdk/s3-request-presigner": "^3.109.0",
+    "commander": "^11.1.0",
+    "cross-fetch": "^3.1.5",
+    "devalue": "^2.0.1",
+    "ee-ts": "^1.0.2",
+    "email-templates": "^8.0.8",
+    "evt": "^2.4.10",
+    "express": "^4.18.2",
+    "glob": "^8.0.3",
+    "handlebars": "^4.7.7",
+    "loglevel": "^1.8.1",
+    "luxon": "^3.0.4",
+    "request-ip": "^3.3.0",
+    "sanitize-html": "^2.11.0",
+    "superjson": "^1.7.4",
+    "tiny-typed-emitter": "^2.1.0",
+    "tlds": "^1.231.0",
+    "ts-dedent": "^2.2.0",
+    "url-regex-safe": "^3.0.0",
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2",
+    "ws": "^8.4.1",
+    "zod": "^3.13.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.1"
+  }
+}

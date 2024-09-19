@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "paths": {
+      "env": ["src/env.ts"],
+      "~/*": ["./src/*"],
+      "server/*": ["./src/server"]
+    },
+    "outDir": "dist/src",
+    "module": "commonjs",
+    "noEmit": false,
+    "types": ["node"]
+  },
+  "exclude": ["node_modules"]
+}
