@@ -1,16 +1,15 @@
-import path from "path";
-import { defineConfig, HttpProxy, splitVendorChunkPlugin } from "vite";
-import react from "@vitejs/plugin-react";
-import nodeResolve from "@rollup/plugin-node-resolve";
-import postcss from "./postcss.config";
-import checker from "vite-plugin-checker";
+//@ts-ignore Vite config runs in Node.js environment
+import path from 'path'
+import { defineConfig, HttpProxy, splitVendorChunkPlugin } from 'vite'
+import react from '@vitejs/plugin-react'
+import nodeResolve from '@rollup/plugin-node-resolve'
+import postcss from './postcss.config'
+import checker from 'vite-plugin-checker'
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ command }) => {
-  const mdx = await import("@mdx-js/rollup").then((r) => r.default);
-  const rehypeHighlight = await import("rehype-highlight").then(
-    (r) => r.default
-  );
+  const mdx = await import('@mdx-js/rollup').then(r => r.default)
+  const rehypeHighlight = await import('rehype-highlight').then(r => r.default)
 
   return {
     // define: {
@@ -21,7 +20,7 @@ export default defineConfig(async ({ command }) => {
       mdx({ rehypePlugins: [rehypeHighlight], remarkPlugins: [] }),
       nodeResolve(),
       splitVendorChunkPlugin(),
-      command === "build" ? checker({ typescript: true }) : undefined,
+      command === 'build' ? checker({ typescript: true }) : undefined,
     ],
     css: {
       postcss,
@@ -56,11 +55,11 @@ export default defineConfig(async ({ command }) => {
     //   ],
     // },
     build: {
-      outDir: "dist",
+      outDir: 'dist',
       //   assetsDir: "app-assets",
     },
-  };
-});
+  }
+})
 
 // function configureProxy(proxy: HttpProxy.Server) {
 //   proxy.removeAllListeners("error");

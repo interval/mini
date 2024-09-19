@@ -56,15 +56,18 @@ devDependencies:
   tailwindcss-text-fill:
     specifier: ^0.2.0
     version: 0.2.0(tailwindcss@3.4.12)
+  typescript:
+    specifier: ^5.6.2
+    version: 5.6.2
   vite:
     specifier: ^5.4.6
     version: 5.4.6
   vite-plugin-checker:
     specifier: ^0.8.0
-    version: 0.8.0(vite@5.4.6)
+    version: 0.8.0(typescript@5.6.2)(vite@5.4.6)
   vite-tsconfig-paths:
     specifier: ^5.0.1
-    version: 5.0.1(vite@5.4.6)
+    version: 5.0.1(typescript@5.6.2)(vite@5.4.6)
 
 packages:
 
@@ -2687,7 +2690,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /tsconfck@3.1.3:
+  /tsconfck@3.1.3(typescript@5.6.2):
     resolution: {integrity: sha512-ulNZP1SVpRDesxeMLON/LtWM8HIgAJEIVpVVhBM6gsmvQ8+Rh+ZG7FWGvHh7Ah3pRABwVJWklWCr/BTZSv0xnQ==}
     engines: {node: ^18 || >=20}
     hasBin: true
@@ -2696,11 +2699,19 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+    dependencies:
+      typescript: 5.6.2
     dev: true
 
   /type-fest@0.21.3:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
+    dev: true
+
+  /typescript@5.6.2:
+    resolution: {integrity: sha512-NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
     dev: true
 
   /unified@11.0.5:
@@ -2795,7 +2806,7 @@ packages:
       vfile-message: 4.0.2
     dev: true
 
-  /vite-plugin-checker@0.8.0(vite@5.4.6):
+  /vite-plugin-checker@0.8.0(typescript@5.6.2)(vite@5.4.6):
     resolution: {integrity: sha512-UA5uzOGm97UvZRTdZHiQVYFnd86AVn8EVaD4L3PoVzxH+IZSfaAw14WGFwX9QS23UW3lV/5bVKZn6l0w+q9P0g==}
     engines: {node: '>=14.16'}
     peerDependencies:
@@ -2839,6 +2850,7 @@ packages:
       npm-run-path: 4.0.1
       strip-ansi: 6.0.1
       tiny-invariant: 1.3.3
+      typescript: 5.6.2
       vite: 5.4.6
       vscode-languageclient: 7.0.0
       vscode-languageserver: 7.0.0
@@ -2846,7 +2858,7 @@ packages:
       vscode-uri: 3.0.8
     dev: true
 
-  /vite-tsconfig-paths@5.0.1(vite@5.4.6):
+  /vite-tsconfig-paths@5.0.1(typescript@5.6.2)(vite@5.4.6):
     resolution: {integrity: sha512-yqwv+LstU7NwPeNqajZzLEBVpUFU6Dugtb2P84FXuvaoYA+/70l9MHE+GYfYAycVyPSDYZ7mjOFuYBRqlEpTig==}
     peerDependencies:
       vite: '*'
@@ -2856,7 +2868,7 @@ packages:
     dependencies:
       debug: 4.3.7
       globrex: 0.1.2
-      tsconfck: 3.1.3
+      tsconfck: 3.1.3(typescript@5.6.2)
       vite: 5.4.6
     transitivePeerDependencies:
       - supports-color
