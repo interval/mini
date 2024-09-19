@@ -13,3 +13,5 @@ export const INPUT_SCHEMAS = {
     returns: z.string(),
   },
 } satisfies Record<string, InputSchema>;
+
+export type InputSchemas = typeof INPUT_SCHEMAS;
