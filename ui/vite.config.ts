@@ -1,4 +1,5 @@
-//@ts-ignore Vite config runs in Node.js environment
+// Vite config runs in Node.js environment
+// @ts-nocheck
 import path from 'path'
 import { defineConfig, HttpProxy, splitVendorChunkPlugin } from 'vite'
 import react from '@vitejs/plugin-react'
