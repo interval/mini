@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noEmit": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    //   "types": ["@types/jest", "mdx"],
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "module": "ES2020"
+    // "paths": {
+    //   "env": ["src/env.ts"],
+    //   "~/*": ["./src/*"],
+    //   "server/*": ["./src/server"]
+    // }
+  },
+  "include": ["interval.d.ts", "**/*.ts", "**/*.tsx", "**/*.mdx"],
+  "exclude": ["node_modules"]
+  //   "ts-node": {
+  //     "compilerOptions": {
+  //       "module": "CommonJS"
+  //     }
+  //   }
+}
