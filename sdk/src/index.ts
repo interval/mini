@@ -1,11 +1,12 @@
 import { createServer, IncomingMessage, ServerResponse } from "http";
-import { AnyZodObject, z } from "zod";
+import { z } from "zod";
 import { join } from "path";
 import { InputSchemas } from "./ioSchema";
 import { globalActionStore } from "./globalStores";
 import { Action, TransactionManager } from "./TransactionManager";
 import { Failure } from "./Failure";
 import { makeUIServer } from "./serveUI";
+import { rpcSchema, RpcSchema } from "./rpc";
 
 export async function io<T extends keyof InputSchemas>(
   methodName: T,
@@ -22,35 +23,10 @@ export async function io<T extends keyof InputSchemas>(
   return resp;
 }
 
-type RpcDef = {
-  params: AnyZodObject;
-};
-
-const rpcSchema = {
-  invoke: {
-    params: z.object({
-      slug: z.string(),
-    }),
-  },
-  get_transaction_state: {
-    params: z.object({
-      transactionId: z.number(),
-    }),
-  },
-  respond_to_io_request: {
-    params: z.object({
-      transactionId: z.number(),
-      body: z.any(),
-    }),
-  },
-} satisfies Record<string, RpcDef>;
-
-type RpcSchema = typeof rpcSchema;
-
 type RpcHandlers = {
   [K in keyof RpcSchema]: (
     params: z.infer<RpcSchema[K]["params"]>
-  ) => Promise<any>;
+  ) => Promise<z.infer<RpcSchema[K]["returns"]> | Failure<any>>;
 };
 
 function parseJsonBody(req: IncomingMessage): Promise<any> {
@@ -85,7 +61,10 @@ export function createIntervalApp(options: {
   });
 
   const rpc: RpcHandlers = {
-    invoke: async (params) => {
+    list_available_actions: async () => {
+      return Object.keys(options.actions).map((slug) => ({ slug }));
+    },
+    invoke_transaction: async (params) => {
       const result = transactionManager.invoke(params.slug);
 
       if (result instanceof Failure) {
@@ -93,20 +72,34 @@ export function createIntervalApp(options: {
       }
 
       return {
-        id: result.id,
+        transactionId: result.id,
       };
     },
     get_transaction_state: async (params) => {
       const state = transactionManager.getTransactionState(
         params.transactionId
       );
-      return state;
+
+      if (state instanceof Failure) {
+        return state;
+      }
+
+      return {
+        transactionId: params.transactionId,
+        state: state,
+        pendingIORequest: state.pendingIORequest,
+      };
     },
     respond_to_io_request: async (params) => {
-      return transactionManager.respondToIORequest(
+      const result = transactionManager.respondToIORequest(
         params.transactionId,
         params.body
       );
+      if (result instanceof Failure) {
+        return result;
+      }
+
+      return {};
     },
   };
 
