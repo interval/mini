@@ -30,8 +30,29 @@ type IORequestHandler = ReturnType<typeof ioRequestHandler>;
 
 class Transaction {
   private state: "running" | "success" | "error" = "running";
+  private subscribers = new Set<() => void>();
 
   pendingIORequest: IORequestHandler | null = null;
+
+  subscribe(fn: () => void) {
+    this.subscribers.add(fn);
+    return {
+      unsubscribe: () => {
+        this.subscribers.delete(fn);
+      },
+    };
+  }
+
+  onStateChange() {
+    for (const fn of this.subscribers) {
+      fn();
+    }
+  }
+
+  #setState(state: "running" | "success" | "error") {
+    this.state = state;
+    this.onStateChange();
+  }
 
   getState() {
     return {
@@ -54,18 +75,20 @@ class Transaction {
         makeIORequest: async (methodName, props) => {
           console.log("createIORequest", methodName, props);
           this.pendingIORequest = ioRequestHandler(methodName, props);
+          this.onStateChange();
           const value = await this.pendingIORequest.promise;
           this.pendingIORequest = null;
+          this.onStateChange();
           return value;
         },
       },
       () =>
         fn()
           .then(() => {
-            this.state = "success";
+            this.#setState("success");
           })
           .catch(() => {
-            this.state = "error";
+            this.#setState("error");
           })
     );
   }
@@ -79,6 +102,14 @@ export class TransactionManager {
   #nextId = 0;
 
   #transactions: Record<number, Transaction> = {};
+
+  subscribeToTransactionState(id: number, onStateChange: () => void) {
+    const transaction = this.#transactions[id];
+    if (!transaction) {
+      return new Failure(`Transaction ${id} not found`);
+    }
+    return transaction.subscribe(onStateChange);
+  }
 
   getTransactionState(id: number) {
     const transaction = this.#transactions[id];

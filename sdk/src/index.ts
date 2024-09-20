@@ -61,6 +61,9 @@ export function createIntervalApp(options: {
   });
 
   const rpc: RpcHandlers = {
+    list_transactions: async () => {
+      return [];
+    },
     list_available_actions: async () => {
       return Object.keys(options.actions).map((slug) => ({ slug }));
     },
@@ -87,7 +90,6 @@ export function createIntervalApp(options: {
       return {
         transactionId: params.transactionId,
         state: state,
-        pendingIORequest: state.pendingIORequest,
       };
     },
     respond_to_io_request: async (params) => {
@@ -136,10 +138,45 @@ export function createIntervalApp(options: {
   }
 
   createServer(async (req, res) => {
-    if (req.method === "POST" && req.url?.startsWith("/api")) {
+    if (req.method === "GET" && req.url?.startsWith("/api/events")) {
+      const id = Number(req.url.split("/")[3]);
+
+      if (isNaN(id)) {
+        res.writeHead(400, { "Content-Type": "text/plain" });
+        res.end("Invalid transaction id");
+        return;
+      }
+
+      // Set the headers to keep the connection alive and enable SSE
+      res.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      });
+
+      const subscription = transactionManager.subscribeToTransactionState(
+        id,
+        () => {
+          res.write(`data: ${JSON.stringify({})}\n\n`);
+        }
+      );
+
+      if (subscription instanceof Failure) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end(subscription.message);
+        return;
+      }
+
+      // Clean up when the client closes the connection
+      req.on("close", () => {
+        subscription.unsubscribe();
+        res.end();
+      });
+    } else if (req.method === "POST" && req.url?.startsWith("/api")) {
       await handleRpc(req, res);
+    } else {
+      await serveUI(req, res);
     }
-    await serveUI(req, res);
   }).listen(options.port, () => {
     console.log(`Server running at http://localhost:${options.port}`);
   });

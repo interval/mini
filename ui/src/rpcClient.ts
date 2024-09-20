@@ -5,6 +5,7 @@ export async function rpcClient<T extends keyof RpcSchema>(
   endpoint: T,
   params: RpcTypes<T>['params']
 ) {
+  console.log('>>>', endpoint, params)
   const resp = await fetch(`/api/${endpoint}`, {
     method: 'POST',
     body: JSON.stringify(params),
@@ -17,7 +18,11 @@ export function useRpcQuery<T extends keyof RpcSchema>(
   endpoint: T,
   params: RpcTypes<T>['params']
 ) {
-  const data = useQuery(endpoint, () => rpcClient(endpoint, params))
+  const data = useQuery(endpoint, () => rpcClient(endpoint, params), {
+    refetchInterval: false,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: false,
+  })
 
   return data
 }

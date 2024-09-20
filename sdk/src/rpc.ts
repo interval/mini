@@ -16,7 +16,6 @@ export const rpcSchema = {
     returns: z.object({
       state: z.any(),
       transactionId: z.number(),
-      pendingIORequest: z.any(),
     }),
   },
   respond_to_io_request: {
@@ -31,6 +30,15 @@ export const rpcSchema = {
     returns: z.array(
       z.object({
         slug: z.string(),
+      })
+    ),
+  },
+  list_transactions: {
+    params: z.object({}),
+    returns: z.array(
+      z.object({
+        transactionId: z.number(),
+        actionSlug: z.string(),
       })
     ),
   },

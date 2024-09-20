@@ -11,6 +11,7 @@ import 'form-request-submit-polyfill'
 import { INPUT_SCHEMAS } from '../../sdk/src/ioSchema'
 import ActionList from './pages/ActionList'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import Action from './pages/Action'
 
 console.log('logging input schemas')
 console.log(INPUT_SCHEMAS)
@@ -32,9 +33,12 @@ root.render(
   <BrowserRouter>
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <h1 className="text-green-500">Interval</h1>
+        <Link to="/">
+          <h1 className="text-slate-500">Interval</h1>
+        </Link>
         <Routes>
           <Route path="/" element={<ActionList />} />
+          <Route path="/actions/:actionSlug" element={<Action />} />
           <Route
             path="/actions"
             element={
