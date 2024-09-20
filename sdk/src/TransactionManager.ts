@@ -25,9 +25,10 @@ export class TransactionManager {
 
     const id = this.#nextId++;
 
-    this.#transactions[id] = new Transaction(action.handler);
+    const transaction = new Transaction(action.handler);
+    this.#transactions[id] = transaction;
 
-    return { id };
+    return { id, state: transaction.stateManager.getState() };
   }
 
   constructor(public actions: Record<string, Action>) {}

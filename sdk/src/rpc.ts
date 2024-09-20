@@ -1,4 +1,5 @@
 import { AnyZodObject, z } from "zod";
+import { transactionStateSchema } from "./transactionStateSchema";
 
 export const rpcSchema = {
   invoke_transaction: {
@@ -6,6 +7,7 @@ export const rpcSchema = {
       slug: z.string(),
     }),
     returns: z.object({
+      state: transactionStateSchema,
       transactionId: z.number(),
     }),
   },
@@ -14,7 +16,7 @@ export const rpcSchema = {
       transactionId: z.number(),
     }),
     returns: z.object({
-      state: z.any(),
+      state: transactionStateSchema,
       transactionId: z.number(),
     }),
   },

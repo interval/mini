@@ -76,6 +76,7 @@ export function createIntervalApp(options: {
 
       return {
         transactionId: result.id,
+        state: result.state,
       };
     },
     get_transaction_state: async (params) => {
@@ -87,7 +88,7 @@ export function createIntervalApp(options: {
         return transaction;
       }
 
-      const state = transaction.getState();
+      const state = transaction.stateManager.getState();
 
       return {
         transactionId: params.transactionId,
@@ -103,7 +104,7 @@ export function createIntervalApp(options: {
         return transaction;
       }
 
-      transaction.respondToIORequest(params.body);
+      transaction.pendingIORequest?.submitResponse(params.body);
 
       return {};
     },
@@ -166,8 +167,12 @@ export function createIntervalApp(options: {
         return;
       }
 
-      const subscription = transaction.subscribe(() => {
-        res.write(`data: ${JSON.stringify({})}\n\n`);
+      function sendJson(data: any) {
+        res.write(`data: ${JSON.stringify(data)}\n\n`);
+      }
+
+      const subscription = transaction.stateManager.subscribe((newState) => {
+        sendJson(newState);
       });
 
       if (subscription instanceof Failure) {

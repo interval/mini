@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { Failure } from "./Failure";
 import { globalActionStore } from "./globalStores";
+import { TransactionStateManager } from "./TransactionStateManager";
 import { INPUT_SCHEMAS, InputSchemas } from "./ioSchema";
 
 function ioRequestHandler<T extends keyof InputSchemas>(
@@ -13,6 +14,7 @@ function ioRequestHandler<T extends keyof InputSchemas>(
   });
 
   const schema = INPUT_SCHEMAS[methodName];
+
   return {
     submitResponse: (body: any) => {
       const parsedBody = schema.returns.safeParse(body);
@@ -29,37 +31,12 @@ function ioRequestHandler<T extends keyof InputSchemas>(
 type IORequestHandler = ReturnType<typeof ioRequestHandler>;
 
 export class Transaction {
-  private state: "running" | "success" | "error" = "running";
-  private subscribers = new Set<() => void>();
+  stateManager = new TransactionStateManager({
+    status: "running",
+    pendingIORequest: null,
+  });
 
   pendingIORequest: IORequestHandler | null = null;
-
-  subscribe(fn: () => void) {
-    this.subscribers.add(fn);
-    return {
-      unsubscribe: () => {
-        this.subscribers.delete(fn);
-      },
-    };
-  }
-
-  onStateChange() {
-    for (const fn of this.subscribers) {
-      fn();
-    }
-  }
-
-  #setState(state: "running" | "success" | "error") {
-    this.state = state;
-    this.onStateChange();
-  }
-
-  getState() {
-    return {
-      state: this.state,
-      pendingIORequest: this.pendingIORequest?.request ?? null,
-    };
-  }
 
   respondToIORequest(body: any) {
     if (!this.pendingIORequest) {
@@ -75,20 +52,23 @@ export class Transaction {
         makeIORequest: async (methodName, props) => {
           console.log("createIORequest", methodName, props);
           this.pendingIORequest = ioRequestHandler(methodName, props);
-          this.onStateChange();
+          this.stateManager.patchState(
+            "pendingIORequest",
+            this.pendingIORequest.request
+          );
           const value = await this.pendingIORequest.promise;
           this.pendingIORequest = null;
-          this.onStateChange();
+          this.stateManager.patchState("pendingIORequest", null);
           return value;
         },
       },
       () =>
         fn()
           .then(() => {
-            this.#setState("success");
+            this.stateManager.patchState("status", "success");
           })
           .catch(() => {
-            this.#setState("error");
+            this.stateManager.patchState("status", "error");
           })
     );
   }
