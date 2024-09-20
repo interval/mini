@@ -69,7 +69,7 @@ class Transaction {
     return result;
   }
 
-  constructor(public id: number, fn: () => Promise<void>) {
+  constructor(fn: () => Promise<void>) {
     globalActionStore.run(
       {
         makeIORequest: async (methodName, props) => {
@@ -103,28 +103,11 @@ export class TransactionManager {
 
   #transactions: Record<number, Transaction> = {};
 
-  subscribeToTransactionState(id: number, onStateChange: () => void) {
-    const transaction = this.#transactions[id];
-    if (!transaction) {
+  getTransaction(id: number) {
+    if (!(id in this.#transactions)) {
       return new Failure(`Transaction ${id} not found`);
     }
-    return transaction.subscribe(onStateChange);
-  }
-
-  getTransactionState(id: number) {
-    const transaction = this.#transactions[id];
-    if (!transaction) {
-      return new Failure(`Transaction ${id} not found`);
-    }
-    return transaction.getState();
-  }
-
-  respondToIORequest(transactionId: number, body: any) {
-    const transaction = this.#transactions[transactionId];
-    if (!transaction) {
-      return new Failure(`Transaction ${transactionId} not found`);
-    }
-    return transaction.respondToIORequest(body);
+    return this.#transactions[id];
   }
 
   invoke(slug: string) {
@@ -135,7 +118,7 @@ export class TransactionManager {
 
     const id = this.#nextId++;
 
-    this.#transactions[id] = new Transaction(id, action.handler);
+    this.#transactions[id] = new Transaction(action.handler);
 
     return { id };
   }

@@ -79,13 +79,15 @@ export function createIntervalApp(options: {
       };
     },
     get_transaction_state: async (params) => {
-      const state = transactionManager.getTransactionState(
+      const transaction = transactionManager.getTransaction(
         params.transactionId
       );
 
-      if (state instanceof Failure) {
-        return state;
+      if (transaction instanceof Failure) {
+        return transaction;
       }
+
+      const state = transaction.getState();
 
       return {
         transactionId: params.transactionId,
@@ -93,13 +95,15 @@ export function createIntervalApp(options: {
       };
     },
     respond_to_io_request: async (params) => {
-      const result = transactionManager.respondToIORequest(
-        params.transactionId,
-        params.body
+      const transaction = transactionManager.getTransaction(
+        params.transactionId
       );
-      if (result instanceof Failure) {
-        return result;
+
+      if (transaction instanceof Failure) {
+        return transaction;
       }
+
+      transaction.respondToIORequest(params.body);
 
       return {};
     },
@@ -154,12 +158,17 @@ export function createIntervalApp(options: {
         Connection: "keep-alive",
       });
 
-      const subscription = transactionManager.subscribeToTransactionState(
-        id,
-        () => {
-          res.write(`data: ${JSON.stringify({})}\n\n`);
-        }
-      );
+      const transaction = transactionManager.getTransaction(id);
+
+      if (transaction instanceof Failure) {
+        res.writeHead(500, { "Content-Type": "text/plain" });
+        res.end(transaction.message);
+        return;
+      }
+
+      const subscription = transaction.subscribe(() => {
+        res.write(`data: ${JSON.stringify({})}\n\n`);
+      });
 
       if (subscription instanceof Failure) {
         res.writeHead(500, { "Content-Type": "text/plain" });
