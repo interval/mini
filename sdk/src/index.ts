@@ -90,10 +90,7 @@ export function createIntervalApp(options: {
 
       const state = transaction.stateManager.getState();
 
-      return {
-        transactionId: params.transactionId,
-        state: state,
-      };
+      return state;
     },
     respond_to_io_request: async (params) => {
       const transaction = transactionManager.getTransaction(

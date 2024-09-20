@@ -15,10 +15,7 @@ export const rpcSchema = {
     params: z.object({
       transactionId: z.number(),
     }),
-    returns: z.object({
-      state: transactionStateSchema,
-      transactionId: z.number(),
-    }),
+    returns: transactionStateSchema,
   },
   respond_to_io_request: {
     params: z.object({

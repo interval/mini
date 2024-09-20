@@ -29,7 +29,7 @@ function useTransactionState(id: number) {
     transactionId: id,
   })
 
-  const stateFromRpc = rpcQuery.data?.state
+  const stateFromRpc = rpcQuery.data
 
   const state = useMemo(() => {
     // choose the most recent state in a race between the listener and the rpc query
