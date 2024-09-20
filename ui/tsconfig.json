@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -16,12 +17,10 @@
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "module": "ES2020"
-    // "paths": {
-    //   "env": ["src/env.ts"],
-    //   "~/*": ["./src/*"],
-    //   "server/*": ["./src/server"]
-    // }
+    "module": "ES2020",
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
   "include": ["interval.d.ts", "**/*.ts", "**/*.tsx", "**/*.mdx"],
   "exclude": ["node_modules"]

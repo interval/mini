@@ -3,13 +3,13 @@
 @import './combobox.scss';
 @import './context-menu.css';
 @import './forms.scss';
-/* @import '../components/HighlightedCodeBlock/editorTheme.scss';
-@import '../components/IVDatePicker/datepicker.scss';
+@import '../components/HighlightedCodeBlock/editorTheme.scss';
+/* @import '../components/IVDatePicker/datepicker.scss';
 @import '../components/IVDialog/dialog.css';
 @import '../components/DropdownMenu/dropdown.css';
 @import '../components/IVRichTextEditor/iv-rich-text-editor.css';
-@import '../components/IVTable/table.css';
-@import '../components/IVTooltip/tooltip.css'; */
+@import '../components/IVTable/table.css';*/
+@import '../components/IVTooltip/tooltip.css';
 @import 'tailwindcss/utilities';
 
 strong {

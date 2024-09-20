@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom'
 import { useRpcQuery } from '../rpcClient'
 import { useEffect, useMemo, useState } from 'react'
 import { TransactionState } from '../../../sdk/src/transactionStateSchema'
+import { RenderIOCall } from '~/RenderIOCall'
 
 function useListenToTransactionState(id: number) {
   const [data, setData] = useState<TransactionState | null>(null)
@@ -58,6 +59,20 @@ function Transaction({ id }: { id: number }) {
 
   if (!transactionState) {
     return <div>Loading...</div>
+  }
+
+  if (transactionState.pendingIORequest) {
+    return (
+      <>
+        <RenderIOCall
+          ioCall={transactionState.pendingIORequest}
+          onSubmit={value => {
+            console.log('submitted', value)
+          }}
+        />
+        <pre>{JSON.stringify(transactionState, null, 2)}</pre>
+      </>
+    )
   }
 
   return <pre>{JSON.stringify(transactionState, null, 2)}</pre>

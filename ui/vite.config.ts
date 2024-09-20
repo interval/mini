@@ -47,14 +47,14 @@ export default defineConfig(async ({ command }) => {
         ],
       },
     },
-    // resolve: {
-    //   alias: [
-    //     { find: "node-fetch", replacement: "cross-fetch" },
-    //     { find: "~", replacement: path.resolve(__dirname, "./src") },
-    //     { find: "src", replacement: path.resolve(__dirname, "./src") },
-    //     { find: "env", replacement: path.resolve(__dirname, "./env") },
-    //   ],
-    // },
+    resolve: {
+      alias: [
+        // { find: "node-fetch", replacement: "cross-fetch" },
+        { find: '~', replacement: path.resolve(__dirname, './src') },
+        // { find: "src", replacement: path.resolve(__dirname, "./src") },
+        // { find: "env", replacement: path.resolve(__dirname, "./env") },
+      ],
+    },
     build: {
       emptyOutDir: true,
       outDir: 'dist/static',

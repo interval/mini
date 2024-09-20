@@ -100,9 +100,8 @@
     "use-debounce": "^8.0.4",
     "vite": "^3.2.0",
     "vite-plugin-checker": "^0.6.2",
-    "xlsx": "^0.18.5"
-  },
-  "dependencies": {
+    "xlsx": "^0.18.5",
     "zod": "^3.23.8"
-  }
+  },
+  "dependencies": {}
 }
