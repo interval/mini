@@ -10,10 +10,17 @@ createIntervalApp({
       handler: async () => {
         console.log("Hello world called");
         // await sleep(2000);
-        const yourName = await io("INPUT_TEXT", {
-          label: "What is your name?",
+        const firstName = await io("INPUT_TEXT", {
+          label: "What is your first name?",
         });
-        console.log(`Hello ${yourName}`);
+
+        await sleep(1000);
+
+        const lastName = await io("INPUT_TEXT", {
+          label: "What is your last name?",
+        });
+
+        console.log(`Hello ${firstName} ${lastName}`);
       },
     },
   },

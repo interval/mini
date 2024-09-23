@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { useRpcQuery } from '../rpcClient'
+import { rpcClient, useRpcQuery } from '../rpcClient'
 import { useEffect, useMemo, useState } from 'react'
 import { TransactionState } from '../../../sdk/src/transactionStateSchema'
 import { RenderIOCall } from '~/RenderIOCall'
@@ -67,7 +67,16 @@ function Transaction({ id }: { id: number }) {
         <RenderIOCall
           ioCall={transactionState.pendingIORequest}
           onSubmit={value => {
-            console.log('submitted', value)
+            rpcClient('respond_to_io_request', {
+              transactionId: id,
+              body: value,
+            })
+              .then(() => {
+                console.log('submitted', value)
+              })
+              .catch(e => {
+                console.error('error submitting', e)
+              })
           }}
         />
         <pre>{JSON.stringify(transactionState, null, 2)}</pre>
